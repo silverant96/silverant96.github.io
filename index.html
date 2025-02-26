@@ -26,6 +26,7 @@
 </head>
 <body>
     <div id="greeting"></div>
+    <div id="tel_id"></div>
     <div class="input-container">
         <input type="number" id="num1" placeholder="Введите первое число">
         <input type="number" id="num2" placeholder="Введите второе число">
@@ -50,10 +51,10 @@
                     'Привет! Не удалось получить твоё имя.';
             }
             if (user?.id) {
-                document.getElementById('greeting').textContent =
+                document.getElementById('tel_id').textContent =
                     `Ваш телеграм айди ${user.id}!`;
             } else {
-                document.getElementById('greeting').textContent =
+                document.getElementById('tel_id').textContent =
                     'Привет! Не удалось получить ваш телеграм айди.';
             }
         }
