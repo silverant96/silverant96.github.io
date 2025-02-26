@@ -122,8 +122,6 @@
             document.getElementById('result').textContent = `Результат: ${sum}`;
 
             if (window.Telegram?.WebApp) {
-                Telegram.WebApp.MainButton.setText('Готово');
-                Telegram.WebApp.MainButton.show();
                 Telegram.WebApp.onEvent('mainButtonClicked', () => {
                     const user = Telegram.WebApp.initDataUnsafe?.user;
                     const message = user?.first_name
