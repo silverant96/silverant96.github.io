@@ -5,36 +5,91 @@
     <title>Sum Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             padding: 20px;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
         }
         .input-container {
-            margin: 10px 0;
+            margin: 15px 0;
         }
         input {
-            padding: 8px;
-            margin: 5px 0;
+            padding: 12px;
+            margin: 10px 0;
             width: 100%;
             box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
         }
-        #greeting, #result {
+        input:focus {
+            border-color: #6b7280;
+            outline: none;
+        }
+        button {
+            padding: 12px;
+            width: 100%;
+            margin: 10px 0;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #greeting, #tel_id, #result, #location {
             margin-top: 15px;
             font-size: 18px;
+            color: #1f2937;
+            text-align: center;
+        }
+        #greeting {
+            font-weight: bold;
+            color: #4f46e5;
+        }
+        #result {
+            font-weight: 600;
+            color: #16a34a;
+        }
+        #location {
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <div id="greeting"></div>
-    <div id="tel_id"></div>
-    <div class="input-container">
-        <input type="number" id="num1" placeholder="Введите первое число">
-        <input type="number" id="num2" placeholder="Введите второе число">
+    <div class="container">
+        <div id="greeting"></div>
+        <div id="tel_id"></div>
+        <div class="input-container">
+            <input type="number" id="num1" placeholder="Введите первое число">
+            <input type="number" id="num2" placeholder="Введите второе число">
+        </div>
+        <button onclick="calculateSum()">Сложить</button>
+        <button onclick="getLocation()">Узнать мой город</button>
+        <div id="result"></div>
+        <div id="location"></div>
     </div>
-    <button onclick="calculateSum()">Сложить</button>
-    <button onclick="getLocation()">Узнать мой город</button>
-    <div id="result"></div>
-    <div id="location"></div>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
@@ -42,22 +97,21 @@
         if (window.Telegram?.WebApp) {
             Telegram.WebApp.ready();
             Telegram.WebApp.expand();
-            
-            // Получаем данные пользователя
+
             const user = Telegram.WebApp.initDataUnsafe?.user;
             if (user?.first_name) {
-                document.getElementById('greeting').textContent = 
+                document.getElementById('greeting').textContent =
                     `Привет, ${user.first_name}!`;
             } else {
-                document.getElementById('greeting').textContent = 
+                document.getElementById('greeting').textContent =
                     'Привет! Не удалось получить твоё имя.';
             }
             if (user?.id) {
                 document.getElementById('tel_id').textContent =
-                    `Ваш телеграм айди ${user.id}!`;
+                    `Ваш Telegram ID: ${user.id}`;
             } else {
                 document.getElementById('tel_id').textContent =
-                    'Привет! Не удалось получить ваш телеграм айди.';
+                    'Не удалось получить ваш Telegram ID.';
             }
         }
 
@@ -66,20 +120,20 @@
             const num2 = parseFloat(document.getElementById('num2').value) || 0;
             const sum = num1 + num2;
             document.getElementById('result').textContent = `Результат: ${sum}`;
-            
-            // Интеграция с Telegram
+
             if (window.Telegram?.WebApp) {
                 Telegram.WebApp.MainButton.setText('Готово');
                 Telegram.WebApp.MainButton.show();
                 Telegram.WebApp.onEvent('mainButtonClicked', () => {
                     const user = Telegram.WebApp.initDataUnsafe?.user;
-                    const message = user?.first_name 
+                    const message = user?.first_name
                         ? `${user.first_name}, твой результат: ${sum}`
                         : `Результат: ${sum}`;
                     Telegram.WebApp.sendData(message);
                 });
             }
         }
+
         function getLocation() {
             if (navigator.geolocation) {
                 document.getElementById('location').textContent = 'Определяю твой город...';
@@ -90,7 +144,6 @@
             }
         }
 
-        // Обработка координат и запрос города
         async function showPosition(position) {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
@@ -107,7 +160,6 @@
             }
         }
 
-        // Обработка ошибок геолокации
         function showError(error) {
             let message;
             switch(error.code) {
