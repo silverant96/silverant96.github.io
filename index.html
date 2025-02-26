@@ -49,6 +49,13 @@
                 document.getElementById('greeting').textContent = 
                     'Привет! Не удалось получить твоё имя.';
             }
+            if (user?.id) {
+                document.getElementById('greeting').textContent =
+                    `Ваш телеграм айди ${user.id}!`;
+            } else {
+                document.getElementById('greeting').textContent =
+                    'Привет! Не удалось получить ваш телеграм айди.';
+            }
         }
 
         function calculateSum() {
